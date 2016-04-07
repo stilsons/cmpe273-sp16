@@ -1,6 +1,10 @@
 package main
 
+<<<<<<< HEAD
 // Assignment 2
+=======
+// Assignment 1
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
 // By Steve Stilson
 
 import (
@@ -9,6 +13,7 @@ import (
 	"log"
 	"net/http"
 	"fmt"
+<<<<<<< HEAD
 	"io"
 	"io/ioutil"
 	"github.com/mkilling/goejdb"
@@ -18,6 +23,11 @@ import (
  	"net/rpc"
  	"strconv"
     "github.com/pelletier/go-toml"
+=======
+	// "strconv"
+	"io"
+	"io/ioutil"
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
 )
 
 type foodstruct struct {
@@ -77,9 +87,15 @@ func (p profile) toString() string {
 	for _, show := range p.Movie.Tv_shows { output += show + ", " }
 	output += "],\n\t\tMovies: \t[ "
 	for _, show := range p.Movie.Movies { output += show + ", " }
+<<<<<<< HEAD
     output += "],\n\ttravel:\t{\n"
 	output += "\t\tflight:\t{\n\t\tseat: " + p.Travel.Flight.Seat
     /*	if p.Travel.Flight.Seat == true { output += "aisle"
+=======
+  output += "],\n\ttravel:\t{\n"
+	output += "\t\tflight:\t{\n\t\tseat: " + p.Travel.Flight.Seat
+/*	if p.Travel.Flight.Seat == true { output += "aisle"
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
 		} else { output += "window"
 		}  */
 	output += "\n\t\t}\n\t}\n}\n"
@@ -89,13 +105,19 @@ func (p profile) toString() string {
 
 // Create an global array of profiles to store here.
 var profiles []profile
+<<<<<<< HEAD
 type Listener int
+=======
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
 
 func main() {
 	fmt.Println("Now in MyRestApp main.")
 
  	// start with one element, so the array is not empty.
+<<<<<<< HEAD
     // Insert one record:
+=======
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
 	var anotherProfile profile
 	var food foodstruct
 	var music musicstruct
@@ -118,6 +140,7 @@ func main() {
 	anotherProfile.Travel = travel
 	anotherProfile.Movie = movie
 
+<<<<<<< HEAD
 	tomlFilename := os.Args[1]
 	fmt.Println("Opening toml file: " + tomlFilename)
 	config, err9 := toml.LoadFile(tomlFilename)
@@ -147,6 +170,12 @@ func main() {
     rpcnum = config.Get("replication.rpc_server_port_num").(int64)
     rpcchannel = ":" + strconv.FormatInt(rpcnum, 10)
 	go initializeRPCServer(rpcchannel)
+=======
+	profiles = append(profiles, anotherProfile)
+
+  fmt.Print("All profiles are: ")
+	fmt.Println(profiles)	// for debugging purposes
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
 
 	mux := routes.New()
 
@@ -157,6 +186,7 @@ func main() {
 	mux.Post("/profile", PostProfile)	// creates a new profile
 
 	http.Handle("/", mux)
+<<<<<<< HEAD
 	var uiport string
 	var uiportnum int64
 	uiportnum = config.Get("database.port_num").(int64)
@@ -169,11 +199,18 @@ func main() {
 } // end main
 
 
+=======
+	log.Println("Listening...")
+	http.ListenAndServe(":3000", nil)
+} // end main
+
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
 func GetProfile(w http.ResponseWriter, r *http.Request) {
 
 	params := r.URL.Query()
 	emailToFind := params.Get(":email")
 	w.Header().Set("Content-Type", "application/json")
+<<<<<<< HEAD
 	var profileReturned profile
 	profileReturned = GetOneRecord(emailToFind, false, false)
 	if profileReturned.Email == "No such email" {
@@ -189,18 +226,51 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 	printAllRecordsInDB()
 
 } // end get
+=======
+  fmt.Println("Looking up the profile for " + emailToFind + ":\n\n")
+	var newProfile profile
+  var found bool
+	found = false
+
+  // Go through the slice until you find the one that matches that email.  Set newProfile to it.
+	for _,element := range profiles {
+		if element.Email == emailToFind {
+			newProfile = element
+		  found = true }
+}
+	if found == false { w.Write([]byte(emailToFind + " not found."))
+	} else {
+		fmt.Println("Found " + newProfile.toString())
+		js, err := json.Marshal(newProfile)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Write(js)
+	}
+	return
+}
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
 
 func PostProfile(w http.ResponseWriter, r *http.Request) {
 	// creates a new profile
 	fmt.Println("Now in PostProfile.")
 //	decoder := json.NewDecoder(r.Body)
 // I tried decoder := json.NewDecoder(strings.NewReader(r.Body)). Didn't work.
+<<<<<<< HEAD
     body, err := ioutil.ReadAll(r.Body)
     if err != nil { panic("Bad body")  }
+=======
+  body, err := ioutil.ReadAll(r.Body)
+  if err != nil {
+		panic("Bad body")
+  }
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
 	var newProfile profile
       	// err := decoder.Decode(&newProfile)
 	err = json.Unmarshal(body, &newProfile)
        	// body, err := ioutil.ReadAll(r.Body)
+<<<<<<< HEAD
 	if  err == io.EOF { fmt.Println("end of file.")
 	  } else if err != nil {
 	      fmt.Println("Error in decoding: ")
@@ -208,11 +278,22 @@ func PostProfile(w http.ResponseWriter, r *http.Request) {
 	  }
 
 	fmt.Println("Now creating the profile for " + newProfile.Email + ":\n")
+=======
+	if  err == io.EOF {
+	      fmt.Println("end of file.")
+	  } else if err != nil {
+	      fmt.Println("Error in decoding: ")
+				fmt.Println(err)
+	  }
+
+	fmt.Println("Now creating the profile for " + newProfile.Email + ":\n\n")
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
 	fmt.Print("newProfile = ")
 	fmt.Println(newProfile)	// for debugging purposes
 	if newProfile.Is_smoking != "yes" && newProfile.Is_smoking != "no" {
 		fmt.Println("Bad value for Is_smoking: " + newProfile.Is_smoking)   }
 
+<<<<<<< HEAD
     if newProfile.Food.Drink_alcohol != "yes" && newProfile.Food.Drink_alcohol != "no" {
 			fmt.Println("Bad value for Drink_alcohol: " + newProfile.Food.Drink_alcohol)   }
 
@@ -273,10 +354,24 @@ func PostProfile(w http.ResponseWriter, r *http.Request) {
  		fmt.Println("Error calling RPCPost: ")
  		log.Fatal(err)
  	}
+=======
+  if newProfile.Food.Drink_alcohol != "yes" && newProfile.Food.Drink_alcohol != "no" {
+			fmt.Println("Bad value for Drink_alcohol: " + newProfile.Food.Drink_alcohol)   }
+
+  if newProfile.Travel.Flight.Seat != "aisle" && newProfile.Travel.Flight.Seat != "window" {
+			fmt.Println("Bad value for Flight.Seat: " + newProfile.Travel.Flight.Seat)   }
+
+	profiles = append(profiles, newProfile)
+	fmt.Println(profiles)	// for debugging purposes
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusCreated)
+
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
 	return
 }
 
 func PutProfile(w http.ResponseWriter, r *http.Request) {
+<<<<<<< HEAD
 	//  In order to update the profile, search for it in the database, delete it and then append a new one with the new info.
 	fmt.Println("Now in PutProfile.")
 
@@ -287,6 +382,29 @@ func PutProfile(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Deleted the profile for " + newProfile.Email + ".\n")
 
 	body, err := ioutil.ReadAll(r.Body)
+=======
+	//  In order to update the profile, search for it, delete it and then append a new one with the new info.
+	fmt.Println("Now in PutProfile.")
+	params := r.URL.Query()
+	emailToFind := params.Get(":email")
+
+	var newProfile profile
+	var found bool
+	found = false
+
+	// Go through the slice until you find the one that matches that email.  Set newProfile to it.
+	for counter,element := range profiles {
+		if element.Email == emailToFind {
+			newProfile = element
+			found = true
+			profiles = append(profiles[:counter], profiles[counter+1:]...)	// deletes it
+		}
+  }
+	if found == false { w.Write([]byte(emailToFind + " not found."))
+	} else {
+		fmt.Println("Now updating the profile for " + emailToFind + ":\n\n")
+		body, err := ioutil.ReadAll(r.Body)
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
     if err != nil {
         panic("Bad body")
     }
@@ -294,6 +412,7 @@ func PutProfile(w http.ResponseWriter, r *http.Request) {
 //		fmt.Println(body)
     err = json.Unmarshal(body, &newProfile)
 				// Unmarshal will only update the fields of the keys sent to it, not all fields.
+<<<<<<< HEAD
 		if  err == io.EOF { fmt.Println("end of file.")
 		} else if err != nil {
           fmt.Println("Bad marshal: ")
@@ -301,10 +420,21 @@ func PutProfile(w http.ResponseWriter, r *http.Request) {
         }
 
 		fmt.Print("Updated newProfile = ")
+=======
+		if  err == io.EOF {
+        fmt.Println("end of file.")
+      } else if err != nil {
+          fmt.Println("Bad marshal: ")
+					fmt.Println(err)
+      }
+
+		fmt.Print("newProfile = ")
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
 		fmt.Println(newProfile)	// for debugging purposes
 		if newProfile.Is_smoking != "yes" && newProfile.Is_smoking != "no" {
 			fmt.Println("Bad value for Is_smoking: " + newProfile.Is_smoking)   }
 
+<<<<<<< HEAD
 	    if newProfile.Food.Drink_alcohol != "yes" && newProfile.Food.Drink_alcohol != "no" {
 				fmt.Println("Bad value for Drink_alcohol: " + newProfile.Food.Drink_alcohol)   }
 
@@ -531,3 +661,38 @@ func GetOneRecord (emailLookUp string, deleteFlag bool, switchDB bool) profile {
 	return newProfile
 
 } // end function
+=======
+	  if newProfile.Food.Drink_alcohol != "yes" && newProfile.Food.Drink_alcohol != "no" {
+				fmt.Println("Bad value for Drink_alcohol: " + newProfile.Food.Drink_alcohol)   }
+
+	  if newProfile.Travel.Flight.Seat != "aisle" && newProfile.Travel.Flight.Seat != "window" {
+				fmt.Println("Bad value for Flight.Seat: " + newProfile.Travel.Flight.Seat)   }
+
+		profiles = append(profiles, newProfile)
+		fmt.Println(profiles)	// for debugging purposes
+		w.WriteHeader(http.StatusNoContent)
+		return
+	} // end found
+} // end Put
+
+func DeleteProfile(w http.ResponseWriter, r *http.Request) {
+	//  Returns an object, in this case a profile.
+	params := r.URL.Query()
+	emailToFind := params.Get(":email")
+	fmt.Println("Now deleting the profile for " + emailToFind + ":\n\n")
+	var found bool
+	found = false
+
+	for counter,element := range profiles {
+		if element.Email == emailToFind {
+		  found = true
+			fmt.Println("Found " + emailToFind + ". Now deleting it.")
+			fmt.Println(element.toString())
+			profiles = append(profiles[:counter], profiles[counter+1:]...)
+			}
+		}
+	if found == false { fmt.Println(emailToFind + " not found.") }
+	w.WriteHeader(http.StatusNoContent)
+	return
+}
+>>>>>>> 805bc29e00779c399a8c5652f88d300bcc78bb86
